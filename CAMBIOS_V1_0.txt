@@ -1,0 +1,60 @@
+APLICACION_SHP - VERSION 1.0
+Base: datos maestros e importaciones
+=====================================================================
+
+Primera version. Carpeta prevista: C:\Trabajos\Aplicacion_SHP
+Compilar con compilar_aplicacion_shp.bat (mismo Python que Calculo_Tablas_Reparto).
+
+1. AL ABRIR LA APLICACION
+-------------------------
+- Se carga TIENDAS_WEB.TXT (igual que en Calculo_Tablas_Reparto):
+  \\napb.central.inditex.grp\almacen\comun\11\DTO. DEVOLUCIONES Y PEDIDOS\TIENDAS_WEB.TXT
+- Se cargan del Access maestro las tres tablas, copiadas enteras (todas sus
+  columnas) a la base local shp.db:
+     T_Configuración_expediciones            -> ACC_CONFIG_EXPEDICIONES
+     T_Configuración_expediciones_apartes    -> ACC_CONFIG_EXPEDICIONES_APARTES
+     T_configuracion_Expediciones_inauguraciones -> ACC_CONFIG_EXPEDICIONES_INAUGURACIONES
+  Ruta: \\napb.central.inditex.grp\almacen\comun\Bases de datos almacen Naron\
+        tablas compartidas\Base de datos maestro.accdb
+  La tabla se busca sin importar tildes ni mayusculas. Si en el Access se
+  llaman distinto, se cambia el nombre en config\config.json.
+- Si la red falla, NUNCA se cierra la aplicacion: se avisa y se usa la ultima
+  copia local.
+
+2. BOTON REFRESCAR DATOS EN CADA FORMULARIO
+-------------------------------------------
+Arriba de cada formulario esta el marco "Datos maestros" con el estado de
+Tiendas_Web y del Access y el boton REFRESCAR DATOS, que vuelve a leer los dos.
+
+3. FORMULARIO DATOS E IMPORTACIONES
+-----------------------------------
+Cada fichero tiene IMPORTAR y VER. El nombre del fichero da igual: se
+reconoce por sus columnas y se avisa si no es el fichero correcto.
+- EXPEDICIONES: CSV ; (Configuración, Ruta, Tienda, Sección, Aparte, Destinos...)
+- PEDIDO / ESTAREPP: igual que en Calculo_Tablas_Reparto, se importa
+  indistintamente un ESTAREPP (.txt, con selector de estados Inicial/1/2) o un
+  fichero de pedidos (Sku; Id Loc.; Apt.; Dem.U; Dem.L...). Queda por
+  tienda-aparte con SKU, lotes, unidades y pais (cruzado con Tiendas_Web).
+  Avisa de las tiendas que no estan en Tiendas_Web.
+- VOLUMETRIA: el mismo Excel y las mismas reglas que en Calculo_Tablas_Reparto
+  (solo 01_UNICA, tallas no numericas fuera).
+- CONTENEDORES HAI: CSV ; (MATRICULA, SKUS, CANTIDAD, LOTES, TCM, TIENDA, AP...).
+  El SKU 0366630440640V2026W se descompone en Tipo/Modelo/Calidad/Color/
+  Talla/Campaña/Año/Cd, y "752 TAR-NOVA" en tienda 752 + nombre.
+Todo lo importado se guarda en shp.db y sigue ahi al volver a abrir.
+El visor permite filtrar y exportar a CSV.
+
+4. VOLUMEN DEL PEDIDO (mismas reglas que Calculo_Tablas_Reparto)
+---------------------------------------------------------------
+- Volumen unitario = volumen caja T.CONT.MED. / UDS./BULTO, moda por clave.
+  Busqueda: EXACTA+UXL -> BASE+UXL -> EXACTA -> BASE.
+- Respaldo si no hay volumetria: Contenedores HAI (moda de unidades por caja
+  300/400; con las dos, mediana). Solo matriculas de un unico SKU, porque las
+  mezcladas no dicen cuanto cabe de ese SKU.
+- Resultado por tienda-aparte: m3, cajas 300, cajas 400 y unidades sin
+  volumetria; y detalle por SKU con el origen de la volumetria.
+
+FICHEROS
+--------
+Todos son nuevos (aplicacion completa).
+Librerias: pyodbc, openpyxl (el BAT las instala si faltan).

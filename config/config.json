@@ -1,0 +1,21 @@
+{
+    "version": "1.0",
+
+    "rutas": {
+
+        "tiendas_web": "\\\\napb.central.inditex.grp\\almacen\\comun\\11\\DTO. DEVOLUCIONES Y PEDIDOS\\TIENDAS_WEB.TXT",
+
+        "access_maestro": "\\\\napb.central.inditex.grp\\almacen\\comun\\Bases de datos almacen Naron\\tablas compartidas\\Base de datos maestro.accdb"
+
+    },
+
+    "tablas_access": {
+
+        "ACC_CONFIG_EXPEDICIONES": "T_Configuración_expediciones",
+
+        "ACC_CONFIG_EXPEDICIONES_APARTES": "T_Configuración_expediciones_apartes",
+
+        "ACC_CONFIG_EXPEDICIONES_INAUGURACIONES": "T_configuracion_Expediciones_inauguraciones"
+
+    }
+}
